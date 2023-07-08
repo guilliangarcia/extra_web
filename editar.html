@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Modificar Datos</title>
+  <style>
+    /* Estilos CSS aquí */
+    body {
+      background-color: #f9e8ea;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    form {
+      background-color: #ffffff;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #ff96a8;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #ff6b81;
+    }
+
+    .success-message {
+      color: green;
+      text-align: center;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Modificar Datos</h1>
+  <form id="modificarForm">
+    <label for="nombre">Nuevo Nombre:</label>
+    <input type="text" id="nombre" required><br>
+    <label for="edad">Nueva Edad:</label>
+    <input type="number" id="edad" required><br>
+    <label for="correo">Nuevo Correo Electrónico:</label>
+    <input type="email" id="correo" required><br>
+    <input type="submit" value="Modificar">
+  </form>
+
+  <div id="mensaje"></div>
+
+  <button id="obtenerDatosBtn">Obtener Datos</button>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Obtener los valores almacenados en la base de datos
+    const obtenerDatos = () => {
+      $.ajax({
+        url: 'http://localhost:3000/obtener_datos',
+        method: 'GET',
+        success: function(response) {
+          if (response.success) {
+            const datos = response.data;
+            // Mostrar los datos en los campos del formulario
+            $('#nombre').val(datos.nombre);
+            $('#edad').val(datos.edad);
+            $('#correo').val(datos.correo);
+          } else {
+            console.error('Error al obtener los datos: ' + response.error);
+            $('#mensaje').html('<p class="error-message">Error al obtener los datos. Inténtalo de nuevo.</p>');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al obtener los datos: ' + error);
+          $('#mensaje').html('<p class="error-message">Error al obtener los datos. Inténtalo de nuevo.</p>');
+        }
+      });
+    };
+
+    // Escuchar el evento submit del formulario de modificación
+    $(document).on('submit', '#modificarForm', function(e) {
+      e.preventDefault();
+
+      const nuevoNombre = $('#nombre').val();
+      const nuevaEdad = $('#edad').val();
+      const nuevoCorreo = $('#correo').val();
+
+      // Realizar solicitud AJAX al servidor para modificar los datos en la base de datos
+      $.ajax({
+        url: 'http://localhost:3000/modificar_datos',
+        method: 'POST',
+        data: JSON.stringify({
+          nombre: nuevoNombre,
+          edad: nuevaEdad,
+          correo: nuevoCorreo
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+          console.log('Datos modificados correctamente');
+          // Mostrar mensaje de éxito en la página
+          $('#mensaje').html('<p class="success-message">Datos modificados correctamente</p>');
+        },
+        error: function(xhr, status, error) {
+          console.error('Error al modificar los datos: ' + error);
+          $('#mensaje').html('<p class="error-message">Error al modificar los datos. Inténtalo de nuevo.</p>');
+        }
+      });
+    });
+
+    // Obtener los datos almacenados al hacer clic en el botón "Obtener Datos"
+    $(document).on('click', '#obtenerDatosBtn', function() {
+      // Llamar a la función para obtener los datos
+      obtenerDatos();
+    });
+  </script>
+</body>
+</html>

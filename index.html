@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Iniciar Sesión</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {
+      background-color: #f9e8ea;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    form {
+      background-color: #ffffff;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #ff96a8;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #ff6b81;
+    }
+
+    p.error-message {
+      color: #ff0000;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Iniciar Sesión</h1>
+  <form id="loginForm">
+    <label for="usuario">Usuario:</label>
+    <input type="text" id="usuario" required><br>
+    <label for="contrasena">Contraseña:</label>
+    <input type="password" id="contrasena" required><br>
+    <input type="submit" value="Iniciar Sesión">
+  </form>
+
+  <script>
+    // Validar inicio de sesión
+    $(document).on('submit', '#loginForm', function(e) {
+      e.preventDefault();
+
+      const usuario = $('#usuario').val();
+      const contrasena = $('#contrasena').val();
+
+      // Verificar las credenciales de inicio de sesión
+      if (usuario === 'usuario' && contrasena === 'contrasena') {
+        console.log('Inicio de sesión exitoso');
+
+        // Redireccionar a la página de registro
+        window.location.href = 'registro.html';
+      } else {
+        console.log('Credenciales incorrectas');
+        // Mostrar mensaje de error en la página
+        $('<p class="error-message">Credenciales incorrectas. Inténtalo de nuevo.</p>').insertAfter('#loginForm');
+      }
+    });
+  </script>
+</body>
+</html>
